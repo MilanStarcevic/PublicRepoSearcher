@@ -1,7 +1,8 @@
 param (
-    [string[]]$keywordsToSearchFor = @("PublicRepoSearch"),
+    [string[]]$keywordsToSearchFor = @("test"),
     [string]$githubUsername = "MilanStarcevic",
     [string]$githubPassword,
+    [string]$gitlabToken,
     [string[]]$bitbucketUsersToSearchFor = @("MilanStarcevic")
 )
 
@@ -12,6 +13,11 @@ function BasicAuthHeaders($username, $password) {
 }
 
 function SearchGitHub () {
+    if (!$githubPassword) { 
+        Write-Output "GitHub password is null. Skipping search on GitHub."
+        return
+    }
+
     Write-Output "GitHub code search of all repositores"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
@@ -38,10 +44,26 @@ function SearchBitBucket () {
     }
 }
 
+function SearchGitLab () {
+    if (!$gitlabToken) { 
+        Write-Output "GitLab private token is null. Skipping search on GitLab."
+        return
+    }
+
+    Write-Output "GitLab code search of all snippet blobs"
+
+    $searchQuery = $keywordsToSearchFor -join "+"
+    $response  = Invoke-RestMethod -Uri "https://gitlab.com/api/v4/search?scope=snippet_blobs&search=$searchQuery" -Headers @{ "PRIVATE-TOKEN" = $gitlabToken }
+    foreach ($item in $response) {
+        Write-Output "`t$($item.web_url)"
+    }
+}
+
 function SearchAll () {  
     Write-Output "Started search for keywords: $($keywordsToSearchFor)" 
     
     SearchGitHub
+    SearchGitLab
     SearchBitBucket
 }
 
