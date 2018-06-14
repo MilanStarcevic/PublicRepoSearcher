@@ -6,9 +6,9 @@ Searches through GitHub and Bitbucket public repositories for keywords. Perfect 
 
 You need PowerShell installed.
 
-Call `.\PublicRepoSearch.ps1` with one of following parameters.
+Call `.\PublicRepoSearch.ps1 -keywordsToSearchFor mycompanyname mycompanydomain -githubUsername someGuy -githubPassword somePassword -bitbucketUsersToSearchFor anoterGuy`.
 
-| Parameter | Explanation | Example |
+| Parameter | Description | Example |
 | ------------- |-------------| -----|
 | keywordsToSearchFor | Array of strings that defines which keywords should be searched for in the public repositories | -keywordsToSearchFor mycompanyname mycompanydomain |
 | githubUsername | The username of your GitHub account. Best to use an empty "service" account. | -githubUsername someGuy |
