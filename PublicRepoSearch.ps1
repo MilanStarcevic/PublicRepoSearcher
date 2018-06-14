@@ -1,22 +1,26 @@
 param (
-    [string[]]$keywordsToSearchFor = @("PublicRepoSearch", "identity", "suo"),
-    [string[]]$githubUsersToSearchFor = "MilanStarcevic",
+    [string[]]$keywordsToSearchFor = @("PublicRepoSearch"),
+    [string]$githubUsername = "MilanStarcevic",
+    [string]$githubPassword,
     [string[]]$bitbucketUsersToSearchFor = "MilanStarcevic"
 )
 
 Import-Module .\PSGithubSearch.psm1
 
+function BasicAuthHeaders($username, $password) {
+    $credPair = "$($username):$($password)"
+    $encodedCredentials = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($credPair))
+    return @{ Authorization = "Basic $encodedCredentials" }
+}
+
 function SearchGitHub () {
-    Write-Output "GitHub search"
+    Write-Output "GitHub code search of all repositores"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    foreach ($user in $githubUsersToSearchFor) {
-        Write-Output "Started search for user: $($user)"
-        
-        $files = Find-GitHubCode -User $user -Keywords $keywordsToSearchFor
-        foreach ($file in $files) {
-            Write-Output "`t$($file.path)"
-        }
+    $searchQuery = $keywordsToSearchFor -join "+"
+    $response  = Invoke-RestMethod -Uri "https://api.github.com/search/code?q=$searchQuery" -Headers (BasicAuthHeaders $githubUsername $githubPassword)
+    foreach ($item in $response.items) {
+        Write-Output "`t$($item.html_url)"
     }
 }
 
