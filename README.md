@@ -1,6 +1,11 @@
 # Public Repository Searcher
 
-Searches through GitHub and Bitbucket public repositories for keywords. Perfect to detect sensitive data exposure.
+Searches through public code repositories for specified keywords. Perfect to detect sensitive data exposure.
+
+Currently supported respositories:
+* GitHub (all public repositories)
+* GitLab (all snippets)
+* Bitbucket (searchable repositories for specified users)
 
 ## How to use?
 
