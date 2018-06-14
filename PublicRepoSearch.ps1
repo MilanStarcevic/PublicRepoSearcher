@@ -5,8 +5,6 @@ param (
     [string[]]$bitbucketUsersToSearchFor = "MilanStarcevic"
 )
 
-Import-Module .\PSGithubSearch.psm1
-
 function BasicAuthHeaders($username, $password) {
     $credPair = "$($username):$($password)"
     $encodedCredentials = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($credPair))
