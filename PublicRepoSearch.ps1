@@ -2,7 +2,7 @@ param (
     [string[]]$keywordsToSearchFor = @("PublicRepoSearch"),
     [string]$githubUsername = "MilanStarcevic",
     [string]$githubPassword,
-    [string[]]$bitbucketUsersToSearchFor = "MilanStarcevic"
+    [string[]]$bitbucketUsersToSearchFor = @("MilanStarcevic")
 )
 
 function BasicAuthHeaders($username, $password) {
