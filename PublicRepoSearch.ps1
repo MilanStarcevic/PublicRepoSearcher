@@ -13,7 +13,7 @@ function BasicAuthHeaders($username, $password) {
 }
 
 function SearchGitHub () {
-    if (!$githubPassword) { 
+    if (!$githubPassword) {
         Write-Output "GitHub password is null. Skipping search on GitHub."
         return
     }
@@ -21,10 +21,12 @@ function SearchGitHub () {
     Write-Output "GitHub code search of all repositores"
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    $searchQuery = $keywordsToSearchFor -join "+"
-    $response  = Invoke-RestMethod -Uri "https://api.github.com/search/code?q=$searchQuery" -Headers (BasicAuthHeaders $githubUsername $githubPassword)
-    foreach ($item in $response.items) {
-        Write-Output "`t$($item.html_url)"
+    foreach ($searchQuery in $keywordsToSearchFor) {
+        $response  = Invoke-RestMethod -Uri "https://api.github.com/search/code?q=$searchQuery" -Headers (BasicAuthHeaders $githubUsername $githubPassword)
+        Write-Output "`tGitHub search results for: $($searchQuery)"
+        foreach ($item in $response.items) {
+            Write-Output "`t`t$($item.html_url)"
+        }
     }
 }
 
@@ -35,9 +37,9 @@ function SearchBitBucket () {
         Write-Output "Started search for user: $($user)"
 
         $searchQuery = $keywordsToSearchFor -join "+"
-        
+
         $pageResponse  = Invoke-RestMethod -Uri "https://api.bitbucket.org/2.0/users/$user/search/code?search_query=$searchQuery"
-        
+
         foreach ($value in $pageResponse.values) {
             Write-Output "`t$($value.file.links.self.href)"
         }
@@ -45,7 +47,7 @@ function SearchBitBucket () {
 }
 
 function SearchGitLab () {
-    if (!$gitlabToken) { 
+    if (!$gitlabToken) {
         Write-Output "GitLab private token is null. Skipping search on GitLab."
         return
     }
@@ -59,9 +61,9 @@ function SearchGitLab () {
     }
 }
 
-function SearchAll () {  
-    Write-Output "Started search for keywords: $($keywordsToSearchFor)" 
-    
+function SearchAll () {
+    Write-Output "Started search for keywords: $($keywordsToSearchFor)"
+
     SearchGitHub
     SearchGitLab
     SearchBitBucket
