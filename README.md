@@ -11,7 +11,7 @@ Currently supported respositories:
 
 You need PowerShell installed.
 
-Call `.\PublicRepoSearch.ps1 -keywordsToSearchFor mycompanyname mycompanydomain -githubUsername someone -githubPassword somePassword -bitbucketUsersToSearchFor another`.
+Call `.\PublicRepoSearch.ps1 -keywordsToSearchFor mycompanyname,mycompanydomain -githubUsername someone -githubPassword somePassword -bitbucketUsersToSearchFor another`.
 
 | Parameter | Description | Example |
 | ------------- |-------------| -----|
